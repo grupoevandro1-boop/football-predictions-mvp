@@ -1,4 +1,4 @@
-const matches = [
+const defaultMatches = [
   {
     id: 1,
     league: 'Premier League',
@@ -61,6 +61,8 @@ const matches = [
   }
 ];
 
+let matches = [...defaultMatches];
+
 const state = {
   picks: {},
   stake: 25
@@ -74,6 +76,20 @@ const stakeInput = document.getElementById('stakeInput');
 const generatePicksButton = document.getElementById('generatePicks');
 const clearPicksButton = document.getElementById('clearPicks');
 const submitBetButton = document.getElementById('submitBet');
+
+async function loadMatches() {
+  try {
+    const response = await fetch('/api/matches');
+    if (!response.ok) return;
+
+    const result = await response.json();
+    if (Array.isArray(result) && result.length) {
+      matches = result;
+    }
+  } catch (error) {
+    console.warn('Usando dados locais de fallback.', error);
+  }
+}
 
 function renderMatches() {
   matchesList.innerHTML = matches
@@ -143,6 +159,7 @@ function renderMatches() {
       const match = matches.find((item) => item.id === matchId);
 
       state.picks[matchId] = {
+        matchId,
         choice,
         odd: match.odds[choice],
         label: choice === 'home' ? match.home : choice === 'draw' ? 'Empate' : match.away
@@ -246,6 +263,9 @@ generatePicksButton.addEventListener('click', generateRandomPicks);
 clearPicksButton.addEventListener('click', clearPicks);
 submitBetButton.addEventListener('click', handleSubmit);
 
-renderMatches();
-renderSlip();
-updateDashboardStats();
+(async function init() {
+  await loadMatches();
+  renderMatches();
+  renderSlip();
+  updateDashboardStats();
+})();
