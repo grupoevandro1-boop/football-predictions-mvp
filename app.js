@@ -29,9 +29,7 @@ body {
   margin: 0;
   min-height: 100vh;
   font-family: "Inter", sans-serif;
-  background:
-    radial-gradient(circle at top left, rgba(96, 165, 250, 0.1), transparent 20%),
-    linear-gradient(135deg, #050b13 0%, #081625 35%, #0c1928 100%);
+  background: radial-gradient(circle at top left, rgba(96, 165, 250, 0.1), transparent 20%), linear-gradient(135deg, #050b13 0%, #081625 35%, #0c1928 100%);
   color: var(--text);
 }
 
